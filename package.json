@@ -1,0 +1,33 @@
+{
+  "name": "ljs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "async": "^3.2.0",
+    "blocks": "^0.3.5",
+    "connect-mongo": "^3.2.0",
+    "connect-session": "0.0.1",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "ejs": "^2.6.2",
+    "ejs-locals": "^1.0.2",
+    "errorhandler": "^1.5.1",
+    "express": "~4.16.1",
+    "express-error-handler": "^1.1.0",
+    "express-session": "^1.17.0",
+    "http-errors": "~1.6.3",
+    "layout": "^2.2.0",
+    "middleware": "^1.0.0",
+    "mongo": "^0.1.0",
+    "mongodb": "^3.5.4",
+    "mongoose": "^5.9.2",
+    "morgan": "~1.9.1",
+    "nconf": "^0.10.0",
+    "partial": "0.0.7",
+    "session": "^0.1.0",
+    "winston": "^3.2.1"
+  }
+}
