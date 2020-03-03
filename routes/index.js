@@ -1,7 +1,16 @@
 let {Router} = require('express');
 let router = Router();
+let {User} = require('../models/users');
 
 let checkAuth = require('../middleware/checkAuth');
+ router.get('/users',function (req,res,next) {
+  User.find({},function (err,users) {
+  if (err) return next(err);
+  res.json(users);
+  })
+ });
+
+
 
   router.get('/', require('./frontpage').get);
 

@@ -24,7 +24,7 @@ let async = require('async');
     }
 });
 
-schema.methods.encryptPassword = function(password) {
+schema.encryptPassword = function(password) {
     return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
 };
 
@@ -37,11 +37,11 @@ schema.virtual('password')
     .get(function() { return this._plainPassword; });
 
 
-schema.methods.checkPassword = function(password) {
+schema.checkPassword = function(password) {
     return this.encryptPassword(password) === this.hashedPassword;
 };
 
-schema.statics.authorize = function(username, password, callback) {
+schema.authorize = function(username, password, callback) {
     let User = this;
 
     async.waterfall([
@@ -81,4 +81,3 @@ util.inherits(AuthError, Error);
 AuthError.prototype.name = 'AuthError';
 
 module.exports.AuthError = AuthError;
-//module.exports.User = mongoose.model('User', schema);
