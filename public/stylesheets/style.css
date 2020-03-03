@@ -1,6 +1,5 @@
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color: gray;
 }
 
 a {
@@ -29,20 +28,20 @@ div#messageArea{
 
 table{
   position: absolute;
-  left: 0px;
-  top:0px;
+  left: 0;
+  top:0;
   border: 2px solid rgb(185,75,200);
-  border-spacing: 0px;
+  border-spacing: 0;
 }
 td{
   width: 60px;
   height: 60px;
   border: 2px solid rgb(185,75,200);
 }
-form{
+form#ind{
   position: absolute;
-  bottom: 0px;
-  right: 0px;
+  bottom: 0;
+  right: 0;
   padding: 15px;
   background-color: rgb(185,75,200);
 }
@@ -53,8 +52,7 @@ form input{
   padding: 4px;
 }
 .hit {
-
-  background: url("./public/images/ship.png") no-repeat center center;
+  background: url("../images/ship.png") no-repeat center center;
 }
 .miss {
   background: url("images/miss.png") no-repeat center center;

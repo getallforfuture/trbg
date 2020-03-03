@@ -8,62 +8,45 @@ let mongoose = require('mongoose');
 let app = require('../app');
 let debug = require('debug')('ljs:server');
 let http = require('http');
-let config =require('config/config');
+let config =require('../config');
 let log =require('libs/log')(module);
 
-let session = require('express-session');
 
-let connectSession = require('connect-session');
-session = connectSession.session;
-let  MongoStore = require('connect-mongo')(session);
-
-app.use(function (req,res,next) {
-  req.session.numberofVisits = req.session.numberofVisits +1||1;
-  res.send("Visits"+req.session.numberofVisits);
-});
-
-app.use(session({
-  secret:"Killer",
-  key:"sid",
-  cookie:{
-    path:"/",
-    httpOnly:true,
-    maxAge:null
-  },
-  store:new MongoStore({mongooseConnection: mongoose.connection})
-}));
-
+mongoose.set('useCreateIndex', true);
+//let connectSession = require('connect-session');
+//session = connectSession.session;
 /**
  * Get port from environment and store in Express.
  */
-
-let port = normalizePort(process.env.PORT || config.port);
+//let db= mongoose.connection.db;
+//console.log(db.getCollection('sessions').find({}));
+let port = normalizePort(process.env.PORT || config.get('port'));
 app.set('port', port);
 app.use(function (err,req,res,next) {
-  if (app.get('env') ==='development'){
-    let errorHandler =erhndlr();
-    errorHandler(err,req,res,next);
-  }else {
-    res.send(500);
-  }
+    if (app.get('env') ==='development'){
+        let errorHandler =erhndlr();
+        errorHandler(err,req,res,next);
+    }else {
+        res.send(500);
+    }
 });
 /**
  * Create HTTP server.
  */
 
 let server =http.createServer(app).listen(port,function () {
-  log.info("server run" + config.port);
-}).on('error', onError).on('listening', onListening);
+    log.info("server run" + port);
+}).on('listening', onListening);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 let User =require('../models/users').User;
 app.get('/users',function (req,res,next) {
-  User.find({},function (err,users) {
-    if(err) return next(err);
-    res.json(User);
-  });
+    User.find({},function (err,users) {
+        if(err) return next(err);
+        res.json(User);
+    });
 });
 //server.listen(port);
 //server
@@ -74,57 +57,57 @@ app.get('/users',function (req,res,next) {
  */
 
 function normalizePort(val) {
-  let port = parseInt(val, 10);
+    let port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+    if (port >= 0) {
+        // port number
+        return port;
+    }
 
-  return false;
+    return false;
 }
 
 /**
  * Event listener for HTTP server "error" event.
  */
-
+/*
 function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
 
-  let bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+    let bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
 }
-
+*/
 /**
  * Event listener for HTTP server "listening" event.
  */
 
 function onListening() {
-  let addr = server.address();
-  let bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+    let addr = server.address();
+    let bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+    debug('Listening on ' + bind);
 }

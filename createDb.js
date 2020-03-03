@@ -12,10 +12,10 @@ mongoose.disconnect();
 process.exit(err ? 255:0);
 });
 
+
 function open(callback){
     mongoose.connection.on('open',callback);
 }
-
 function dropDatabase(callback){
     let db =mongoose.connection.db;
     db.dropDatabase(callback);

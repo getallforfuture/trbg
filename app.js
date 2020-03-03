@@ -1,25 +1,36 @@
 let log = require('./libs/log')(module);
 let express = require('express');
 let path = require('path');
+
 let errorHandler = require('express-error-handler');
-let HttpError =require('error').HttpError;
-let createError = require('http-errors');
+let HttpError =require('./error').HttpError;
+//let createError = require('http-errors');
 //let ejs = require('ejs-locals');
 
 let cookieParser = require('cookie-parser');
-//let mongoose = require('mongoose');
+let mongoose = require('mongoose');
 let logger = require('morgan');
-
+//let bodyParser=require('body-parser');
 
 let indexRouter =require('./routes/index');
 let usersRouter = require('./routes/users');
 
 console.log("11111");
 let app = express();
+
+let session = require('express-session');
+let MongoStore=require('connect-mongo')(session);
+app.use(session({
+    secret:'killing',
+    saveUninitialized:true,
+    resave:true,
+    store:new MongoStore({mongooseConnection : mongoose.connection})
+}));
+
 console.log("11111");
 app.use(errorHandler());
 
-app.use(require('middleware/sendHttpError'));
+app.use(require('./middleware/sendHttpError'));
 
 app.engine('ejs',require('ejs-locals'));
 
@@ -31,7 +42,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-
+//app.use(bodyParser);
 
 
 
@@ -46,27 +57,27 @@ app.use('/users', usersRouter);
 
 
 app.use(function (req,res,next) {
- res.end('layout/page.ejs');
+    res.end('layout/page.ejs');
 });
 
 // catch 404 and forward to error handler
 app.use(function(err, req, res, next) {
-  if (typeof err == 'number') { // next(404);
-    err = new HttpError(err);
-  }
-
-  if (err instanceof HttpError) {
-    res.sendHttpError(err);
-  } else {
-
-    if (app.get('env') ==='development') {
-      errorHandler()(err, req, res, next);
-    } else {
-      log.error(err);
-      err = new HttpError(500);
-      res.sendHttpError(err);
+    if (typeof err == 'number') { // next(404);
+        err = new HttpError(err);
     }
-  }
+
+    if (err instanceof HttpError) {
+        res.sendHttpError(err);
+    } else {
+
+        if (app.get('env') ==='development') {
+            errorHandler()(err, req, res, next);
+        } else {
+            log.error(err);
+            err = new HttpError(500);
+            res.sendHttpError(err);
+        }
+    }
 });
 
 module.exports = app;
